@@ -1,107 +1,125 @@
 # HTML Doc
 
-An Agent Skills package for making editable, standalone HTML documents.
+**A document editor that fits in a single HTML file.** Open the file, edit the text and formatting in the browser, and save back to the same file. No server, no account, no install.
 
-[한국어](README.md) · [Skill instructions](SKILL.md) · [Demo](examples/demo.html) · [Add an editor](tools/add-editor.html)
+[한국어](README.md) · [Agent instructions](SKILL.md) · [Korean reference](references/guide.ko.md) · [Latest release](https://github.com/tonywjs/html-doc/releases/latest)
 
-Create a report, guide, or letter with an inline editor. Open the resulting HTML in a browser to edit text and formatting, save changes, recover a local backup, or download a clean read-only copy. No server, browser extension, or AI account is needed to use a generated document.
+![An example document on the desktop](docs/media/doc-desktop.png)
 
-**Current release: 1.7.0.** Agent instructions are in English, with a Korean reference. The editor and conversion-tool UI are currently **Korean**; document content can be in any language. This package does not yet provide an English UI toggle.
+**Current release: 1.7.0.** Agent instructions are in English, with a Korean reference. The editor and conversion-tool UI are currently **Korean**; document content can be in any language.
 
-## Downloads
+## Try it in a minute
 
-[Latest release](https://github.com/tonywjs/html-doc/releases/latest) · [Editable demo](https://github.com/tonywjs/html-doc/releases/latest/download/demo.html) · [Standalone conversion tool](https://github.com/tonywjs/html-doc/releases/latest/download/add-editor.html)
+1. Download [demo.html](https://github.com/tonywjs/html-doc/releases/latest/download/demo.html).
+2. Open it in a browser. A double click is enough.
+3. Press **✎ 편집** (edit) at the top right and change any sentence.
+4. Press **저장** (save). You pick the destination file once; after that it overwrites the same file.
 
-Download an HTML file and open it in your browser.
+Already have an HTML file? Download [add-editor.html](https://github.com/tonywjs/html-doc/releases/latest/download/add-editor.html), open it, and choose your file to get an editable copy.
 
-## Try it without installing a skill
+## What the documents look like
 
-Download and extract the repository or release ZIP, then open:
+The document design is entirely yours. Below is the bundled example (`examples/demo.html`); the editing features sit on top without touching the design.
 
-- `examples/demo.html`: magazine-style example with the complete editor.
-- `assets/skeleton.html`: starter document to copy and customize.
-- `tools/add-editor.html`: choose an existing `.html`/`.htm` file and download an editable copy.
-
-Open the built `.html` files, not `*-src.html`. Source files contain build placeholders. A GitHub source-file page displays code; download the file to run it locally.
-
-## Install for an AI agent
-
-Install the **whole folder**, including assets. `SKILL.md` alone is not sufficient. Use one installation per agent to avoid duplicate entries.
-
-| Environment | Personal installation folder | Example request |
-|---|---|---|
-| Claude Code | `~/.claude/skills/html-doc/` | `/html-doc Create an editable project update.` |
-| Codex local | `~/.agents/skills/html-doc/` | `$html-doc Create an editable project update.` |
-| Other Agent Skills clients | Use that client's documented skill location | Ask it to use the `html-doc` skill |
-
-For a project-scoped install, place the folder under `.claude/skills/` or `.agents/skills/` within the project instead. The final path must end in `html-doc/SKILL.md`. GitHub ZIP downloads may add an outer folder; rename or copy its contents accordingly.
-
-Alternatively, clone this repository directly into an unused destination. Use this public repository URL:
-
-```sh
-# Claude Code
-mkdir -p ~/.claude/skills
-git clone https://github.com/tonywjs/html-doc.git ~/.claude/skills/html-doc
-
-# Codex
-mkdir -p ~/.agents/skills
-git clone https://github.com/tonywjs/html-doc.git ~/.agents/skills/html-doc
-```
-
-If an installation already exists, inspect it before replacing or updating it. Codex's skill installer can also accept a repository URL. Skill loading and file/browser permissions depend on the client. This is a portable skill folder, not a registered Claude or OpenAI plugin. ChatGPT web/mobile distribution may require product-specific plugin packaging; uploading this repository does not register a plugin.
-
-Official references: [Agent Skills](https://agentskills.io/home), [Claude Code](https://code.claude.com/docs/en/skills), [OpenAI](https://learn.chatgpt.com/docs/build-skills).
-
-## What the buttons do
-
-| Label | Action |
+| Desktop | Mobile |
 |---|---|
-| 편집 | Toggle editing |
-| 저장 | Save; first connection requires choosing a destination |
-| 다른 이름으로 | Save as another file |
-| 배포용 HTML 저장 | Download a read-only copy without editor/history |
-| HTML에 편집기 추가 | Add this editor to another HTML file |
-| 히스토리 | View and restore previous saved versions |
-| 현재 서식 | Show the current formatting inspector |
-| 더보기 | Extra actions on mobile |
-| 인쇄 | Print the document |
+| ![A section with cards and a table](docs/media/doc-desktop-2.png) | ![Mobile layout](docs/media/doc-mobile.png) |
 
-`Cmd/Ctrl+E` toggles editing. `Cmd/Ctrl+S` saves. Formatting includes headings, fonts, sizes, colors, alignment, lists, and tables.
+## Features
 
-- **Notes:** select text and leave a note; others reply or resolve it. Notes live inside the file and are dropped from the read-only export.
-- **Block deletion:** remove a whole paragraph, card, or table row, with undo, without disturbing the neighbouring block's styling.
-- **Changes:** compare a returned document with a saved version or another file, see additions, deletions, edits, and format changes over the body, and revert any change.
-- **Author and provenance:** the editor asks for your name once per browser and records who saved each version.
+### Notes: keep the reasoning inside the document
 
-## Saving and compatibility
+Select text and write a note; it anchors to that spot. Reply to it, mark it resolved, or delete it. With no selection, the note applies to the whole document.
 
-The first save cannot silently overwrite an arbitrary local file. In browsers supporting the required file APIs, choose a destination once; the editor can remember its handle for the same origin/path and profile. Permission renewal, browser storage deletion, moving the file, or a different browser can require reconnecting. Other browsers use downloads, whose dialogs follow browser settings.
+![Leaving a note, replying, resolving](docs/media/notes.gif)
 
-Autosave is a local browser backup, not a disk save. Ignore dismisses a restore prompt temporarily; **무시하고 현재 버전으로 백업 확정** replaces the old backup with the current body. Normal editable saves may retain previous content in embedded history. Use read-only export when you want to remove editor history.
+Notes live **inside the file**, so they travel with it. They are dropped from the read-only export.
 
-Read-only export preserves document scripts and external-resource references. It does not sanitize scripts, inline every asset, or publish anything. Keep converted files beside their original relative resources. Automatic editor attachment may need adjustment for `body > ...` selectors, parent-sensitive scripts, or complex web applications.
+### Changes: see what came back edited
 
-The UI supports narrow viewports; native file APIs and contenteditable behavior vary by browser. The included regression harness was exercised with Chromium, simulated mobile viewports, and partly mocked file APIs. It is not a claim that every AI client, native mobile keyboard, or browser has been tested.
+Compare the body against a saved version or another HTML file, and see the difference laid over the document. Green is an addition, red a deletion, blue a word-level edit, purple a formatting change.
 
-## Development
+![Comparing changes and reverting one](docs/media/changes.gif)
 
-Python 3.9+ is needed only for rebuilding/validation. Node.js is used for optional syntax checks. No npm dependencies are needed to run a generated document.
+Pick the baseline from three sources: the state at the last save, a saved version in the file's history, or another HTML file. The default is **the most recent version saved by someone other than you**, so a returned document shows exactly what the other person changed. **원래대로** reverts a single change.
+
+### Block deletion: remove a whole chunk
+
+Delete a paragraph, a card, or a table row as one piece. **블록 선택** outlines the target (press again to widen to the parent block), **블록 삭제** removes it, and the toast's **되돌리기** or `Ctrl/Cmd+Z` brings it back.
+
+![Selecting, deleting and restoring a block](docs/media/block-delete.gif)
+
+Deleting from a table cell removes the **whole row**, because dropping one cell breaks the column alignment. The engine avoids the browser's own delete for the same reason: that path merges the deleted block into its neighbour and the surviving block loses its styling.
+
+### The whole flow
+
+To watch opening a returned document, reviewing the changes, reverting one, and trading notes in one take, see the [full walkthrough (28 seconds)](docs/media/walkthrough.mp4).
+
+## How to use it
+
+### Editing and saving
+
+| Goal | How |
+|---|---|
+| Toggle editing | **✎ 편집** at the top right, or `Cmd/Ctrl+E` |
+| Change text and formatting | The toolbar: paragraph style, font, size, bold/italic/underline/strikethrough, text and background colour, alignment, lists, tables |
+| Inspect formatting at the caret | The **현재 서식** panel |
+| Save | **저장** or `Cmd/Ctrl+S` |
+| Save elsewhere | 더보기 → **다른 이름으로** |
+
+In supported browsers (Chrome, Edge and friends) you choose the destination file **once**. After that it overwrites the same file, though the browser may ask to renew write permission. Browsers without File System Access (Safari, Firefox) fall back to a download.
+
+### Autosave and recovery
+
+Typing leaves a backup inside the browser, separate from the file. If you close without saving and reopen, a recovery prompt appears: **복구** restores the backup into the body, **무시** dismisses it for now, and **무시하고 현재 버전으로 백업 확정** replaces the old backup with the current body.
+
+The first save gives the document an ID so backups are keyed per document. Files that share a name no longer share a backup, and a backup made from a different saved version is flagged before you restore it.
+
+### Author name and save provenance
+
+The first note or the first save asks for your name once and remembers it in the browser; you can change it in the notes panel. Every save records who saved it and when, so the history list and the comparison baselines show names. The name lives in the browser, not in the document.
+
+### Read-only export
+
+더보기 → **배포용 HTML 저장** downloads a copy without the editor, the history, or the notes. The body, the design, and the document's own scripts stay. The original file is untouched.
+
+A normally saved file can carry previous versions in its history, so use the read-only export for anything you share outward.
+
+### Adding the editor to existing HTML
+
+Open `tools/add-editor.html`, choose an HTML file, and download `<name>-편집가능.html`. The original is never overwritten. The same is available from inside an editable document under 더보기 → **HTML에 편집기 추가**.
+
+### Mobile
+
+At 900px and below, edit, save, notes and the more menu sit in one row at the top. The rest lives in the more menu, and the formatting toolbar scrolls sideways.
+
+## Install as an agent skill
+
+To let Claude Code or Codex produce these documents, install the **whole folder**, not just `SKILL.md`.
+
+| Environment | Location | Example |
+|---|---|---|
+| Claude Code | `~/.claude/skills/html-doc/` | `/html-doc make me an editable report` |
+| Codex | `~/.agents/skills/html-doc/` | `$html-doc make me an editable report` |
+
+For a single project, use that project's `.claude/skills/` or `.agents/skills/`. Check that the final path is `html-doc/SKILL.md`.
+
+## Development and validation
 
 ```sh
-python3 assets/build-template.py
-python3 scripts/check-release.py
+python3 assets/build-template.py      # re-inline the engine into skeleton, demo and tool
+python3 scripts/check-release.py      # package checks
+python3 scripts/package-release.py    # build the release ZIP and SHA-256
+node --test tests/unit/*.test.js      # diff engine unit tests
 ```
 
-Canonical CSS/JS are in `assets/`. Shared editor markup is in `assets/skeleton-src.html`; the build also produces the demo and attachment tool. [Testing instructions](tests/README.md) include optional Aside-based browser regressions. Aside is not needed by end users or other AI agents.
+Python 3.9+ is needed only to rebuild or validate the package, never to use a generated document. For browser regressions, see the [validation guide](tests/README.md).
 
-To build a reproducible ZIP locally:
+## Good to know
 
-```sh
-python3 scripts/package-release.py
-```
+- Editing is built on `contenteditable` and `execCommand`. Formatting behaviour differs slightly between browsers.
+- The automatic converter may add a container around the body, so `body > ...` selectors and parent-sensitive scripts need a look after conversion.
+- Documents with relative image or CSS paths need the output kept in the original folder.
+- The read-only export keeps the document's own scripts and external references. It is not a sanitizer and it does not publish anything.
 
-The archive and its SHA-256 checksum are written beside the repository. This command does not contact GitHub or publish files.
-
-## License
-
-See [LICENSE](LICENSE). Examples and templates are bundled with this package; resources you add to your own documents remain subject to their own terms.
+See [LICENSE](LICENSE) for terms.
